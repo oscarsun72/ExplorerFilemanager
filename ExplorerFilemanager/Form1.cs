@@ -113,7 +113,7 @@ namespace ExplorerFilemanager
 
 
             }
-
+            File.Move(fi.FullName, moveToFileFullname);
         }
 
         void dialogBoxWarning(string warningMsg)
