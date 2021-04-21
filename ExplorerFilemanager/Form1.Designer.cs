@@ -36,6 +36,7 @@ namespace ExplorerFilemanager
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // listBox1
@@ -45,7 +46,7 @@ namespace ExplorerFilemanager
             this.listBox1.ItemHeight = 20;
             this.listBox1.Location = new System.Drawing.Point(0, 89);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(626, 684);
+            this.listBox1.Size = new System.Drawing.Size(626, 824);
             this.listBox1.TabIndex = 0;
             this.listBox1.DoubleClick += new System.EventHandler(this.listBox1_DoubleClick);
             this.listBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.listBox1_KeyPress);
@@ -58,7 +59,7 @@ namespace ExplorerFilemanager
             this.listBox2.ItemHeight = 20;
             this.listBox2.Location = new System.Drawing.Point(632, 88);
             this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(414, 684);
+            this.listBox2.Size = new System.Drawing.Size(414, 824);
             this.listBox2.TabIndex = 1;
             this.listBox2.DoubleClick += new System.EventHandler(this.listBox2_DoubleClick);
             this.listBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.listBox1_KeyPress);
@@ -91,7 +92,7 @@ namespace ExplorerFilemanager
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(568, 57);
+            this.comboBox1.Location = new System.Drawing.Point(574, 57);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 26);
             this.comboBox1.TabIndex = 4;
@@ -101,31 +102,43 @@ namespace ExplorerFilemanager
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("新細明體", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label1.Location = new System.Drawing.Point(12, 61);
+            this.label1.ForeColor = System.Drawing.Color.Tomato;
+            this.label1.Location = new System.Drawing.Point(-4, 61);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(536, 16);
+            this.label1.Size = new System.Drawing.Size(576, 16);
             this.label1.TabIndex = 5;
-            this.label1.Text = "點二下即移動檔案至右方選定的目錄；按滑鼠右鍵即開啟選定的檔案或目錄";
+            this.label1.Text = "在下方清單方塊點二下即移動檔案至右方選定的目錄（左右邊點2下作用都一樣）";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("新細明體", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label2.ForeColor = System.Drawing.Color.DarkRed;
             this.label2.Location = new System.Drawing.Point(473, 3);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(216, 16);
             this.label2.TabIndex = 6;
             this.label2.Text = "點二下即貼上已複製好的路徑";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("新細明體", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label3.ForeColor = System.Drawing.Color.Tomato;
+            this.label3.Location = new System.Drawing.Point(706, 61);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(280, 16);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "按滑鼠右鍵就會開啟選定的檔案或目錄";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1058, 799);
+            this.ClientSize = new System.Drawing.Size(1058, 912);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
@@ -135,6 +148,7 @@ namespace ExplorerFilemanager
             this.Controls.Add(this.listBox1);
             this.KeyPreview = true;
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
@@ -153,6 +167,7 @@ namespace ExplorerFilemanager
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }
 

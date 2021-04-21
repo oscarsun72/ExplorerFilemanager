@@ -74,49 +74,71 @@ namespace ExplorerFilemanager
             listFiles();
         }
 
-        void moveFile()        {            
+        void moveFile()
+        {
             if (listBox1.SelectedItems.Count == 0 || listBox2.SelectedItems.Count == 0) return;
-            int idx = listBox1.SelectedIndex;Point p = listBox1.AutoScrollOffset;
-             FileInfo fi = listBox1.SelectedItem as FileInfo;
+            int idx = listBox1.SelectedIndex; Point p = listBox1.AutoScrollOffset;
+            FileInfo fi = listBox1.SelectedItem as FileInfo;
             DirectoryInfo di = listBox2.SelectedItem as DirectoryInfo;
             string moveToFileFullname = di.FullName + "\\" +
                  listBox1.SelectedItem.ToString();
-            if (File.Exists(moveToFileFullname))
+            try
             {
-                DialogResult dr = MessageBox.Show("檔案已存在，是否取代原檔案？\r\n" +
-                    "取消作業請按「取消」，\r\n重新命名移動過去的檔，請按「否」。", "注意：", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-                switch (dr)
+                if (File.Exists(moveToFileFullname))
                 {
-                    case DialogResult.Cancel:
-                        break;
-                    case DialogResult.Yes:
-                        File.Delete(moveToFileFullname);
-                        File.Move(fi.FullName, moveToFileFullname);
-                        break;
-                    case DialogResult.No:
-                        int i = 0;
-                        string ext = fi.Extension;
-                        string movefileName =
-                            moveToFileFullname.Substring(0, moveToFileFullname.IndexOf(ext));
-                        do
-                        {
-                            moveToFileFullname = movefileName +"("
-                                   + (i++.ToString() + ")"+ ext);
-                        } while (File.Exists(moveToFileFullname));
-                        File.Move(fi.FullName, moveToFileFullname);
-                        break;
-                    default:
-                        break;
-                }
+                    DialogResult dr = MessageBox.Show("檔案已存在，是否取代原檔案？\r\n" +
+                        "取消作業請按「取消」，\r\n重新命名移動過去的檔，請按「否」。", "注意：", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                    switch (dr)
+                    {
+                        case DialogResult.Cancel:
+                            break;
+                        case DialogResult.Yes:
+                            File.Delete(moveToFileFullname);
+                            File.Move(fi.FullName, moveToFileFullname);
+                            break;
+                        case DialogResult.No:
+                            int i = 0;
+                            string ext = fi.Extension;
+                            string movefileName =
+                                moveToFileFullname.Substring(0, moveToFileFullname.IndexOf(ext));
+                            do
+                            {
+                                moveToFileFullname = movefileName + "("
+                                       + (i++.ToString() + ")" + ext);
+                            } while (File.Exists(moveToFileFullname));
+                            File.Move(fi.FullName, moveToFileFullname);
+                            break;
+                        default:
+                            break;
+                    }
 
+
+                }
+                else
+                    File.Move(fi.FullName, moveToFileFullname);
+                listBox1RefQuery();
+                if (idx + 10 < listBox1.Items.Count)
+                    listBox1.SelectedIndex = idx + 10;
+                else
+                    listBox1.SelectedIndex = listBox1.Items.Count-1 ;
+                if (idx < listBox1.Items.Count)
+                    listBox1.SelectedIndex = idx;
+                listBox1.AutoScrollOffset = p;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            finally {; }
+            try
+            {
 
             }
-            else
-                File.Move(fi.FullName, moveToFileFullname);
-            listBox1RefQuery();
-            if (idx < listBox1.Items.Count)
-                listBox1.SelectedIndex = idx;
-            listBox1.AutoScrollOffset = p;
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         void dialogBoxWarning(string warningMsg)
@@ -224,11 +246,26 @@ namespace ExplorerFilemanager
 
         private void listBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((Control.ModifierKeys & Keys.Control) == Keys.Control)                
+            if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
                 if (e.KeyChar == 3)//char.Parse("c")) 
-                //Clipboard.SetData()
-                Clipboard.SetDataObject(listBox1.SelectedItem);                
-
+                                   //Clipboard.SetData()
+                    Clipboard.SetDataObject(listBox1.SelectedItem);
         }
+
+        //https://docs.microsoft.com/zh-tw/dotnet/desktop/winforms/advanced/how-to-add-data-to-the-clipboard?view=netframeworkdesktop-4.8
+        // Demonstrates SetFileDropList, ContainsFileDroList, and GetFileDropList
+        public System.Collections.Specialized.StringCollection
+            SwapClipboardFileDropList(
+            System.Collections.Specialized.StringCollection replacementList)
+        {
+            System.Collections.Specialized.StringCollection returnList = null;
+            if (Clipboard.ContainsFileDropList())
+            {
+                returnList = Clipboard.GetFileDropList();
+                Clipboard.SetFileDropList(replacementList);
+            }
+            return returnList;
+        }
+
     }
 }
