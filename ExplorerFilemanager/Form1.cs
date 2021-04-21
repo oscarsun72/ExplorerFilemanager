@@ -41,10 +41,10 @@ namespace ExplorerFilemanager
         {
             di = new DirectoryInfo(textBox2.Text);
             //            listBox2.DataSource = di.GetDirectories();            
-            List<DirectoryInfo> dList=new List<DirectoryInfo>();
+            List<DirectoryInfo> dList = new List<DirectoryInfo>();
             foreach (DirectoryInfo item in di.GetDirectories())
             {
-                if (item.Name.IndexOf("System Volume Information") ==-1)
+                if (item.Name.IndexOf("System Volume Information") == -1)
                     dList.Add(item);
             }
             listBox2.DataSource = dList;
@@ -113,7 +113,8 @@ namespace ExplorerFilemanager
 
 
             }
-            File.Move(fi.FullName, moveToFileFullname);
+            else
+                File.Move(fi.FullName, moveToFileFullname);
         }
 
         void dialogBoxWarning(string warningMsg)
