@@ -62,13 +62,11 @@ namespace ExplorerFilemanager
         private void listBox1_DoubleClick(object sender, EventArgs e)
         {
             moveFile();
-            listBox1RefQuery();
         }
 
         private void listBox2_DoubleClick(object sender, EventArgs e)
         {
             moveFile();
-            listBox1RefQuery();
         }
 
         private void listBox1RefQuery()
@@ -76,10 +74,10 @@ namespace ExplorerFilemanager
             listFiles();
         }
 
-        void moveFile()
-        {
+        void moveFile()        {            
             if (listBox1.SelectedItems.Count == 0 || listBox2.SelectedItems.Count == 0) return;
-            FileInfo fi = listBox1.SelectedItem as FileInfo;
+            int idx = listBox1.SelectedIndex;Point p = listBox1.AutoScrollOffset;
+             FileInfo fi = listBox1.SelectedItem as FileInfo;
             DirectoryInfo di = listBox2.SelectedItem as DirectoryInfo;
             string moveToFileFullname = di.FullName + "\\" +
                  listBox1.SelectedItem.ToString();
@@ -102,8 +100,8 @@ namespace ExplorerFilemanager
                             moveToFileFullname.Substring(0, moveToFileFullname.IndexOf(ext));
                         do
                         {
-                            moveToFileFullname = movefileName
-                                   + (i++.ToString() + ext);
+                            moveToFileFullname = movefileName +"("
+                                   + (i++.ToString() + ")"+ ext);
                         } while (File.Exists(moveToFileFullname));
                         File.Move(fi.FullName, moveToFileFullname);
                         break;
@@ -115,6 +113,10 @@ namespace ExplorerFilemanager
             }
             else
                 File.Move(fi.FullName, moveToFileFullname);
+            listBox1RefQuery();
+            if (idx < listBox1.Items.Count)
+                listBox1.SelectedIndex = idx;
+            listBox1.AutoScrollOffset = p;
         }
 
         void dialogBoxWarning(string warningMsg)
@@ -203,6 +205,30 @@ namespace ExplorerFilemanager
                 DirectoryInfo di = listBox2.SelectedItem as DirectoryInfo;
                 rightKeyMouse(di.FullName);
             }
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_DoubleClick(object sender, EventArgs e)
+        {
+            textBox1.Text = Clipboard.GetText();
+        }
+
+        private void textBox2_DoubleClick(object sender, EventArgs e)
+        {
+            textBox2.Text = Clipboard.GetText();
+        }
+
+        private void listBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if ((Control.ModifierKeys & Keys.Control) == Keys.Control)                
+                if (e.KeyChar == 3)//char.Parse("c")) 
+                //Clipboard.SetData()
+                Clipboard.SetDataObject(listBox1.SelectedItem);                
+
         }
     }
 }

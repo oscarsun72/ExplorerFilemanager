@@ -34,28 +34,34 @@ namespace ExplorerFilemanager
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // listBox1
             // 
+            this.listBox1.Font = new System.Drawing.Font("新細明體", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 18;
+            this.listBox1.ItemHeight = 20;
             this.listBox1.Location = new System.Drawing.Point(0, 89);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(626, 688);
+            this.listBox1.Size = new System.Drawing.Size(626, 684);
             this.listBox1.TabIndex = 0;
             this.listBox1.DoubleClick += new System.EventHandler(this.listBox1_DoubleClick);
+            this.listBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.listBox1_KeyPress);
             this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
             // 
             // listBox2
             // 
+            this.listBox2.Font = new System.Drawing.Font("新細明體", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.listBox2.FormattingEnabled = true;
-            this.listBox2.ItemHeight = 18;
+            this.listBox2.ItemHeight = 20;
             this.listBox2.Location = new System.Drawing.Point(632, 88);
             this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(414, 688);
+            this.listBox2.Size = new System.Drawing.Size(414, 684);
             this.listBox2.TabIndex = 1;
             this.listBox2.DoubleClick += new System.EventHandler(this.listBox2_DoubleClick);
+            this.listBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.listBox1_KeyPress);
             this.listBox2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox2_MouseDown);
             // 
             // textBox1
@@ -64,8 +70,10 @@ namespace ExplorerFilemanager
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(626, 29);
             this.textBox1.TabIndex = 2;
+            this.textBox1.TabStop = false;
             this.textBox1.Text = "E:\\!!!!2021@1@所有文檔@\\＃DOCDOCX\\漢字相關\\2漢字doc\\";
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBox1.DoubleClick += new System.EventHandler(this.textBox1_DoubleClick);
             this.textBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textBox1_MouseDown);
             // 
             // textBox2
@@ -74,8 +82,10 @@ namespace ExplorerFilemanager
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(414, 29);
             this.textBox2.TabIndex = 3;
+            this.textBox2.TabStop = false;
             this.textBox2.Text = "F:\\";
             this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            this.textBox2.DoubleClick += new System.EventHandler(this.textBox2_DoubleClick);
             this.textBox2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textBox2_MouseDown);
             // 
             // comboBox1
@@ -85,13 +95,39 @@ namespace ExplorerFilemanager
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 26);
             this.comboBox1.TabIndex = 4;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.comboBox1.TabStop = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("新細明體", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label1.Location = new System.Drawing.Point(12, 61);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(536, 16);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "點二下即移動檔案至右方選定的目錄；按滑鼠右鍵即開啟選定的檔案或目錄";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("新細明體", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label2.Location = new System.Drawing.Point(473, 3);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(216, 16);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "點二下即貼上已複製好的路徑";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1058, 799);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
@@ -115,6 +151,8 @@ namespace ExplorerFilemanager
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }
 
