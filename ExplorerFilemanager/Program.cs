@@ -17,6 +17,7 @@ namespace ExplorerFilemanager
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
+            //ExplorerFilemanager.ClipBoardPlus.CopyFiles(@"D:\Downloads\如何想得清楚和正確.docm");
         }
     }
 }

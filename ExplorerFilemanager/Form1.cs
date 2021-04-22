@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ExplorerFilemanager
@@ -34,12 +29,16 @@ namespace ExplorerFilemanager
 
         void listFiles()
         {
-            di = new DirectoryInfo(textBox1.Text);
+            string fdrPath = textBox1.Text;
+            if (!Directory.Exists(fdrPath)) return;
+            di = new DirectoryInfo(fdrPath);
             listBox1.DataSource = di.GetFiles();
         }
         void listFolders()
         {
-            di = new DirectoryInfo(textBox2.Text);
+            string fdrPath = textBox2.Text;
+            if (!Directory.Exists(fdrPath)) return;
+            di = new DirectoryInfo(fdrPath);
             //            listBox2.DataSource = di.GetDirectories();            
             List<DirectoryInfo> dList = new List<DirectoryInfo>();
             foreach (DirectoryInfo item in di.GetDirectories())
@@ -120,7 +119,7 @@ namespace ExplorerFilemanager
                 if (idx + 10 < listBox1.Items.Count)
                     listBox1.SelectedIndex = idx + 10;
                 else
-                    listBox1.SelectedIndex = listBox1.Items.Count-1 ;
+                    listBox1.SelectedIndex = listBox1.Items.Count - 1;
                 if (idx < listBox1.Items.Count)
                     listBox1.SelectedIndex = idx;
                 listBox1.AutoScrollOffset = p;
@@ -249,22 +248,8 @@ namespace ExplorerFilemanager
             if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
                 if (e.KeyChar == 3)//char.Parse("c")) 
                                    //Clipboard.SetData()
-                    Clipboard.SetDataObject(listBox1.SelectedItem);
-        }
-
-        //https://docs.microsoft.com/zh-tw/dotnet/desktop/winforms/advanced/how-to-add-data-to-the-clipboard?view=netframeworkdesktop-4.8
-        // Demonstrates SetFileDropList, ContainsFileDroList, and GetFileDropList
-        public System.Collections.Specialized.StringCollection
-            SwapClipboardFileDropList(
-            System.Collections.Specialized.StringCollection replacementList)
-        {
-            System.Collections.Specialized.StringCollection returnList = null;
-            if (Clipboard.ContainsFileDropList())
-            {
-                returnList = Clipboard.GetFileDropList();
-                Clipboard.SetFileDropList(replacementList);
-            }
-            return returnList;
+                                   //Clipboard.SetDataObject(listBox1.SelectedItem);
+                    ClipBoardPlus.CopyFiles(((FileInfo)listBox1.SelectedItem).FullName);
         }
 
     }
