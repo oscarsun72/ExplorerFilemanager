@@ -40,6 +40,7 @@ namespace ExplorerFilemanager
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -97,10 +98,11 @@ namespace ExplorerFilemanager
             // 
             // comboBox1
             // 
+            this.comboBox1.Font = new System.Drawing.Font("新細明體", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(594, 57);
+            this.comboBox1.Location = new System.Drawing.Point(616, 57);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(102, 26);
+            this.comboBox1.Size = new System.Drawing.Size(84, 24);
             this.comboBox1.TabIndex = 4;
             this.comboBox1.TabStop = false;
             // 
@@ -121,7 +123,7 @@ namespace ExplorerFilemanager
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("新細明體", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label2.ForeColor = System.Drawing.Color.DarkRed;
-            this.label2.Location = new System.Drawing.Point(472, 3);
+            this.label2.Location = new System.Drawing.Point(770, 3);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(216, 16);
             this.label2.TabIndex = 6;
@@ -171,12 +173,24 @@ namespace ExplorerFilemanager
             this.label4.TabIndex = 10;
             this.label4.Text = "字型大小";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("新細明體", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label5.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.label5.Location = new System.Drawing.Point(12, 1);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(719, 16);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "可多重選取，如檔案總管般　按Enter或「`」鍵亦可執行　可複製或刪除所選之檔案(Ctrl+c 與 delete 鍵)";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1141, 880);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.textBox3);
@@ -188,6 +202,7 @@ namespace ExplorerFilemanager
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.listBox2);
             this.Controls.Add(this.listBox1);
+            this.HelpButton = true;
             this.KeyPreview = true;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -214,6 +229,7 @@ namespace ExplorerFilemanager
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
     }
 }
 
