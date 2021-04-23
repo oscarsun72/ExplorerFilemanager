@@ -68,70 +68,25 @@ namespace ExplorerFilemanager
             moveFile();
         }
 
-        private void listBox1RefQuery()
+        internal void listBox1RefQuery()
         {
             listFiles();
         }
 
         void moveFile()
         {
-            if (listBox1.SelectedItems.Count == 0 || listBox2.SelectedItems.Count == 0) return;
-            int idx = listBox1.SelectedIndex; Point p = listBox1.AutoScrollOffset;
-            FileInfo fi = listBox1.SelectedItem as FileInfo;
+            if (listBox1.SelectedItems.Count == 0 || listBox2.SelectedItems.Count == 0) return;            
+            ListBox.SelectedObjectCollection selected= listBox1.SelectedItems;
+            List<FileInfo> fis = new List<FileInfo>();
+            foreach (object item in selected)
+            {
+                fis.Add((FileInfo)item);
+            }
             DirectoryInfo di = listBox2.SelectedItem as DirectoryInfo;
-            string moveToFileFullname = di.FullName + "\\" +
-                 listBox1.SelectedItem.ToString();
             try
             {
-                if (File.Exists(moveToFileFullname))
-                {
-                    DialogResult dr = MessageBox.Show("檔案已存在，是否取代原檔案？\r\n" +
-                        "取消作業請按「取消」，\r\n重新命名移動過去的檔，請按「否」。", "注意：", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-                    switch (dr)
-                    {
-                        case DialogResult.Cancel:
-                            break;
-                        case DialogResult.Yes:
-                            File.Delete(moveToFileFullname);
-                            File.Move(fi.FullName, moveToFileFullname);
-                            break;
-                        case DialogResult.No:
-                            int i = 0;
-                            string ext = fi.Extension;
-                            string movefileName =
-                                moveToFileFullname.Substring(0, moveToFileFullname.IndexOf(ext));
-                            do
-                            {
-                                moveToFileFullname = movefileName + "("
-                                       + (i++.ToString() + ")" + ext);
-                            } while (File.Exists(moveToFileFullname));
-                            File.Move(fi.FullName, moveToFileFullname);
-                            break;
-                        default:
-                            break;
-                    }
-
-
-                }
-                else
-                    File.Move(fi.FullName, moveToFileFullname);
-                listBox1RefQuery();
-                if (idx + 10 < listBox1.Items.Count)
-                    listBox1.SelectedIndex = idx + 10;
-                else
-                    listBox1.SelectedIndex = listBox1.Items.Count - 1;
-                if (idx < listBox1.Items.Count)
-                    listBox1.SelectedIndex = idx;
-                listBox1.AutoScrollOffset = p;
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
-            finally {; }
-            try
-            {
-
+                fileOps fMove = new fileOps(fis);
+                fMove.moveFiles2DirControl(di, listBox1, this);
             }
             catch (Exception)
             {
@@ -277,6 +232,14 @@ namespace ExplorerFilemanager
             if (ModifierKeys == Keys.Control || ModifierKeys == Keys.Shift ||
                 ModifierKeys == Keys.Alt) doNotEntered = true;
             else doNotEntered = false;
+            switch (e.KeyCode)
+            {
+                case Keys.Enter://執行多重檔案移動
+                    moveFile();
+                    break;
+                default:
+                    break;
+            }
             if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
             {
                 if (e.KeyCode == Keys.C) //複製檔案 
@@ -284,6 +247,7 @@ namespace ExplorerFilemanager
                     ClipBoardPlus.CopyFiles(((FileInfo)listBox1.SelectedItem).FullName);
                 }
             }
+            
         }
     }
 }

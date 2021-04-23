@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ExplorerFilemanager
 {/*FileInfo
@@ -19,14 +18,87 @@ FileStream	建立檔案串流，可以用來處理二進制檔
   */
     public class fileOps
     {
+        List<FileInfo> fis;
+        FileInfo f;
+        public fileOps(List<FileInfo> fInfos)
+        {
+            fis = fInfos;
+        }
         public fileOps(FileInfo fInfo)
         {
-
+            f = fInfo;
         }
 
         public fileOps(string fileFullname)
         {
+            f = new FileInfo(fileFullname);
+        }
 
+        public void moveFiles2DirControl(DirectoryInfo di,
+            ListBox listBox, Form1 frm)
+        {
+            string moveToFileFullname; ListBox.SelectedIndexCollection idc = listBox.SelectedIndices;//Point p;
+            int idx = idc[idc.Count - 1];
+            foreach (FileInfo fi in fis)
+            {
+                //Point p = listBox1.AutoScrollOffset;
+                try
+                {
+                    moveToFileFullname = di.FullName + "\\" + fi.ToString();
+                    if (File.Exists(moveToFileFullname))
+                    {
+                        DialogResult dr = MessageBox.Show("檔案已存在，是否取代原檔案？\r\n" +
+                            "檔名： " + fi.Name+ "\r\n\r\n"+
+                            "來源檔日期： " + fi.LastWriteTime.ToString() + "\r\n\r\n" +
+                            "目的檔日期： " + "\r\n\r\n" +
+                            "來源檔大小： " +(fi.Length / 1000).ToString() + "KB" + "\r\n\r\n" +
+                            "目的檔大小： " + "\r\n\r\n" +
+                            "取消作業請按「取消」，\r\n重新命名移動過去的檔，請按「否」。", "注意：", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                        switch (dr)
+                        {
+                            case DialogResult.Cancel:
+                                break;
+                            case DialogResult.Yes:
+                                File.Delete(moveToFileFullname);
+                                File.Move(fi.FullName, moveToFileFullname);
+                                break;
+                            case DialogResult.No:
+                                int i = 0;
+                                string ext = fi.Extension;
+                                string movefileName =
+                                    moveToFileFullname.Substring(0, moveToFileFullname.IndexOf(ext));
+                                do
+                                {
+                                    moveToFileFullname = movefileName + "("
+                                           + (i++.ToString() + ")" + ext);
+                                } while (File.Exists(moveToFileFullname));
+                                File.Move(fi.FullName, moveToFileFullname);
+                                break;
+                            default:
+                                break;
+                        }
+
+
+                    }
+                    else
+                        File.Move(fi.FullName, moveToFileFullname);
+
+                    frm.listBox1RefQuery();
+                    if (idx + 10 < listBox.Items.Count)
+                        listBox.SelectedIndex = idx + 10;
+                    else
+                        listBox.SelectedIndex = listBox.Items.Count - 1;
+                    if (idx < listBox.Items.Count)
+                        listBox.SelectedIndex = idx;
+                    //listBox.AutoScrollOffset = p;
+
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+                finally {; }
+            }
         }
     }
 }
