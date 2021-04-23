@@ -103,5 +103,9 @@ FileStream	建立檔案串流，可以用來處理二進制檔
                 finally {; }
             }
         }
+
+        public void deleteFiles(DirectoryInfo di,
+            ListBox listBox, Form1 frm)
+        { }
     }
 }
