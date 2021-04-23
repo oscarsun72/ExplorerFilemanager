@@ -8,9 +8,10 @@ namespace ExplorerFilemanager
     {
         public static void CopyFiles(string fileFullname)
         {
-            StringCollection A =
-                    new StringCollection();
-            A.Add(fileFullname);
+            //StringCollection A =
+            //        new StringCollection();
+            //A.Add(fileFullname);//此與下等式，VisualStudio建議simple化
+            StringCollection A =new StringCollection{fileFullname};
             Clipboard.SetFileDropList(A);
         }
 

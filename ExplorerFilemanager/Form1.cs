@@ -191,7 +191,10 @@ namespace ExplorerFilemanager
 
         void rightKeyMouse(string fileorDir)
         {
-            Process.Start(fileorDir);
+            if (File.Exists(fileorDir) || Directory.Exists(fileorDir))
+            {
+                Process.Start(fileorDir);
+            }
         }
 
         private void textBox1_MouseDown(object sender, MouseEventArgs e)
@@ -214,8 +217,11 @@ namespace ExplorerFilemanager
         {
             if (e.Button == MouseButtons.Right)
             {
-                FileInfo fi = listBox1.SelectedItem as FileInfo;
-                rightKeyMouse(fi.FullName);
+                if (listBox1.SelectedItems.Count > 0)
+                {
+                    FileInfo fi = listBox1.SelectedItem as FileInfo;
+                    rightKeyMouse(fi.FullName);
+                }
             }
         }
 
@@ -223,8 +229,11 @@ namespace ExplorerFilemanager
         {
             if (e.Button == MouseButtons.Right)
             {
-                DirectoryInfo di = listBox2.SelectedItem as DirectoryInfo;
-                rightKeyMouse(di.FullName);
+                if (listBox2.SelectedItems.Count > 0)
+                {
+                    DirectoryInfo di = listBox2.SelectedItem as DirectoryInfo;
+                    rightKeyMouse(di.FullName);
+                }
             }
         }
 
@@ -243,14 +252,38 @@ namespace ExplorerFilemanager
             textBox2.Text = Clipboard.GetText();
         }
 
+        private bool doNotEntered = false;//https://bit.ly/3esQfGM
         private void listBox1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
-                if (e.KeyChar == 3)//char.Parse("c")) 
-                                   //Clipboard.SetData()
-                                   //Clipboard.SetDataObject(listBox1.SelectedItem);
-                    ClipBoardPlus.CopyFiles(((FileInfo)listBox1.SelectedItem).FullName);
+        {//https://bit.ly/3esQfGM  https://bit.ly/3aunpVd
+            if (doNotEntered)//不讓按鍵干擾操作
+                e.Handled = true;
+            //if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
+            //    if (e.KeyChar == 3)//char.Parse("c")) 複製檔案 
+            //    {
+            //        /* 
+            //         * 1.System.Collections.Specialized.StringCollection scss = new System.Collections.Specialized.StringCollection();
+            //            scss.Add(((FileInfo)listBox1.SelectedItem).FullName);
+            //            Clipboard.SetData(DataFormats.FileDrop, scss);//這也不行
+            //        * 2. Clipboard.SetData(DataFormats.FileDrop,(FileInfo)listBox1.SelectedItem);
+            //        * 3. Clipboard.SetDataObject((FileInfo)listBox1.SelectedItem);//此法不行，下面才行
+            //        */
+            //        ClipBoardPlus.CopyFiles(((FileInfo)listBox1.SelectedItem).FullName);
+            //        return;
+            //    }
         }
 
+        private void listBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (ModifierKeys == Keys.Control || ModifierKeys == Keys.Shift ||
+                ModifierKeys == Keys.Alt) doNotEntered = true;
+            else doNotEntered = false;
+            if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                if (e.KeyCode == Keys.C) //複製檔案 
+                {
+                    ClipBoardPlus.CopyFiles(((FileInfo)listBox1.SelectedItem).FullName);
+                }
+            }
+        }
     }
 }
