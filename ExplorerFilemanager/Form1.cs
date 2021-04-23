@@ -20,6 +20,7 @@ namespace ExplorerFilemanager
         {
             listFolders(); listFiles();
             comboBox1.DataSource = new List<string> { "move to" };
+            textBox3.Text= "篩選！開頭";
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -46,7 +47,7 @@ namespace ExplorerFilemanager
                 if (item.Name.IndexOf("System Volume Information") == -1)
                     dList.Add(item);
             }
-            listBox2.DataSource = dList;
+            listBox2.DataSource = dList;//.Sort();
 
             /*
             //https://dotblogs.com.tw/marcus116/2011/07/10/31423
@@ -72,11 +73,15 @@ namespace ExplorerFilemanager
         {
             listFiles();
         }
+        internal void listBox2RefQuery()
+        {
+            listFolders();
+        }
 
         void moveFile()
         {
-            if (listBox1.SelectedItems.Count == 0 || listBox2.SelectedItems.Count == 0) return;            
-            ListBox.SelectedObjectCollection selected= listBox1.SelectedItems;
+            if (listBox1.SelectedItems.Count == 0 || listBox2.SelectedItems.Count == 0) return;
+            ListBox.SelectedObjectCollection selected = listBox1.SelectedItems;
             List<FileInfo> fis = new List<FileInfo>();
             foreach (object item in selected)
             {
@@ -234,9 +239,40 @@ namespace ExplorerFilemanager
             else doNotEntered = false;
             switch (e.KeyCode)
             {
-                case Keys.Enter://執行多重檔案移動
-                    moveFile();
+                case Keys.Enter:
+                    moveFile();//執行多重檔案移動
                     break;
+                case Keys.Oem3://Esc鍵下的「`」鍵
+                    moveFile();//執行多重檔案移動
+                    break;
+                case Keys.F5:
+                    listBox1RefQuery();
+                    break;
+                case Keys.Delete:
+                    if (listBox1.SelectedItems.Count == 1)
+                    {
+                        if (ModifierKeys == Keys.Shift) { }
+                        else
+                        {
+                            if (MessageBox.Show("確定刪除？", "", MessageBoxButtons.OKCancel, MessageBoxIcon.
+                                Warning) != DialogResult.OK)
+                                return;
+                        }
+                        int idx = listBox1.SelectedIndex;
+                        File.Delete(((FileInfo)listBox1.SelectedItem).FullName);
+                        listBox1RefQuery();
+                        listBox1.SelectionMode = SelectionMode.One;
+                        if (idx + 10 < listBox1.Items.Count)
+                            listBox1.SelectedIndex = idx + 10;
+                        else
+                            listBox1.SelectedIndex = listBox1.Items.Count - 1;
+                        if (idx < listBox1.Items.Count)
+                            listBox1.SelectedIndex = idx;
+                        listBox1.SelectionMode = SelectionMode.MultiExtended;
+                    }
+
+                    break;
+
                 default:
                     break;
             }
@@ -247,7 +283,52 @@ namespace ExplorerFilemanager
                     ClipBoardPlus.CopyFiles(((FileInfo)listBox1.SelectedItem).FullName);
                 }
             }
-            
+
+        }
+
+        private void listBox2_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.F5:
+                    listBox2RefQuery();
+                    break;
+                case Keys.Oem3://Esc鍵下的「`」鍵
+                    moveFile();//執行多重檔案移動
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            float flSize = (float)numericUpDown1.Value;
+            using (Font fnt1 = new Font(listBox1.Font.FontFamily, flSize),
+                        fnt2 = new Font(listBox2.Font.FontFamily, flSize))
+            {
+                listBox1.Font = fnt1;
+                listBox2.Font = fnt2;
+            }
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+            if (textBox3.Text== "篩選！開頭")
+            {
+                string fdrPath = textBox2.Text;
+                di = new DirectoryInfo(fdrPath);
+                List<DirectoryInfo> dList = new List<DirectoryInfo>();
+                foreach (DirectoryInfo item in di.GetDirectories())
+                {
+                    if (item.Name.IndexOf("System Volume Information") == -1 &&
+                        item.Name.StartsWith("！"))
+                        dList.Add(item);
+                }
+                listBox2.DataSource = dList;//.Sort();
+
+
+            }
         }
     }
 }
