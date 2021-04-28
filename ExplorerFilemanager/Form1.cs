@@ -20,6 +20,7 @@ namespace ExplorerFilemanager
         {
             listFolders(); listFiles();
             comboBox1.DataSource = new List<string> { "move to" };
+            textBox3.Text = "篩選！開頭";
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -46,7 +47,7 @@ namespace ExplorerFilemanager
                 if (item.Name.IndexOf("System Volume Information") == -1)
                     dList.Add(item);
             }
-            listBox2.DataSource = dList;
+            listBox2.DataSource = dList;//.Sort();
 
             /*
             //https://dotblogs.com.tw/marcus116/2011/07/10/31423
@@ -68,70 +69,29 @@ namespace ExplorerFilemanager
             moveFile();
         }
 
-        private void listBox1RefQuery()
+        internal void listBox1RefQuery()
         {
             listFiles();
+        }
+        internal void listBox2RefQuery()
+        {
+            listFolders();
         }
 
         void moveFile()
         {
             if (listBox1.SelectedItems.Count == 0 || listBox2.SelectedItems.Count == 0) return;
-            int idx = listBox1.SelectedIndex; Point p = listBox1.AutoScrollOffset;
-            FileInfo fi = listBox1.SelectedItem as FileInfo;
+            ListBox.SelectedObjectCollection selected = listBox1.SelectedItems;
+            List<FileInfo> fis = new List<FileInfo>();
+            foreach (object item in selected)
+            {
+                fis.Add((FileInfo)item);
+            }
             DirectoryInfo di = listBox2.SelectedItem as DirectoryInfo;
-            string moveToFileFullname = di.FullName + "\\" +
-                 listBox1.SelectedItem.ToString();
             try
             {
-                if (File.Exists(moveToFileFullname))
-                {
-                    DialogResult dr = MessageBox.Show("檔案已存在，是否取代原檔案？\r\n" +
-                        "取消作業請按「取消」，\r\n重新命名移動過去的檔，請按「否」。", "注意：", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-                    switch (dr)
-                    {
-                        case DialogResult.Cancel:
-                            break;
-                        case DialogResult.Yes:
-                            File.Delete(moveToFileFullname);
-                            File.Move(fi.FullName, moveToFileFullname);
-                            break;
-                        case DialogResult.No:
-                            int i = 0;
-                            string ext = fi.Extension;
-                            string movefileName =
-                                moveToFileFullname.Substring(0, moveToFileFullname.IndexOf(ext));
-                            do
-                            {
-                                moveToFileFullname = movefileName + "("
-                                       + (i++.ToString() + ")" + ext);
-                            } while (File.Exists(moveToFileFullname));
-                            File.Move(fi.FullName, moveToFileFullname);
-                            break;
-                        default:
-                            break;
-                    }
-
-
-                }
-                else
-                    File.Move(fi.FullName, moveToFileFullname);
-                listBox1RefQuery();
-                if (idx + 10 < listBox1.Items.Count)
-                    listBox1.SelectedIndex = idx + 10;
-                else
-                    listBox1.SelectedIndex = listBox1.Items.Count - 1;
-                if (idx < listBox1.Items.Count)
-                    listBox1.SelectedIndex = idx;
-                listBox1.AutoScrollOffset = p;
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
-            finally {; }
-            try
-            {
-
+                fileOps fMove = new fileOps(fis);
+                fMove.moveFiles2DirControl(di, listBox1, this);
             }
             catch (Exception)
             {
@@ -277,12 +237,156 @@ namespace ExplorerFilemanager
             if (ModifierKeys == Keys.Control || ModifierKeys == Keys.Shift ||
                 ModifierKeys == Keys.Alt) doNotEntered = true;
             else doNotEntered = false;
+            switch (e.KeyCode)
+            {
+                case Keys.Enter:
+                    moveFile();//執行多重檔案移動
+                    break;
+                case Keys.Oem3://Esc鍵下的「`」鍵
+                    moveFile();//執行多重檔案移動
+                    break;
+                case Keys.F5:
+                    listBox1RefQuery();
+                    break;
+                case Keys.Delete:
+                    if (listBox1.SelectedItems.Count == 1)
+                    {
+                        if (ModifierKeys == Keys.Shift) { }
+                        else
+                        {
+                            if (MessageBox.Show("確定刪除？", "", MessageBoxButtons.OKCancel, MessageBoxIcon.
+                                Warning) != DialogResult.OK)
+                                return;
+                        }
+                        int idx = listBox1.SelectedIndex;
+                        File.Delete(((FileInfo)listBox1.SelectedItem).FullName);
+                        listBox1RefQuery();
+                        listBox1.SelectionMode = SelectionMode.One;
+                        if (idx + 10 < listBox1.Items.Count)
+                            listBox1.SelectedIndex = idx + 10;
+                        else
+                            listBox1.SelectedIndex = listBox1.Items.Count - 1;
+                        if (idx < listBox1.Items.Count)
+                            listBox1.SelectedIndex = idx;
+                        listBox1.SelectionMode = SelectionMode.MultiExtended;
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
             if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
             {
-                if (e.KeyCode == Keys.C) //複製檔案 
+                if (e.KeyCode == Keys.C) //複製檔案到剪貼簿準備手動貼上
                 {
-                    ClipBoardPlus.CopyFiles(((FileInfo)listBox1.SelectedItem).FullName);
+                    if (listBox1.Items.Count > 0)
+                    {
+                        //ClipBoardPlus.CopyFile(((FileInfo)listBox1.SelectedItem).FullName);
+                        int i = 0;
+                        string[] listboxselected = new string[listBox1.SelectedItems.Count];
+                        switch (listBox1.Items[0].GetType().Name)
+                        {
+                            case "FileInfo":
+                                foreach (FileInfo item in listBox1.SelectedItems)
+                                    listboxselected[i++] = item.FullName;
+                                break;
+                            case "DirectoryInfo":
+                                foreach (DirectoryInfo item in listBox1.SelectedItems)
+                                    listboxselected[i++] = item.FullName;
+                                break;
+                            default:
+                                break;
+                        }
+                        ClipBoardPlus.CopyFilesDirs(listboxselected);
+                    }
                 }
+            }
+
+        }
+
+        private void listBox2_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.F5:
+                    listBox2RefQuery();
+                    break;
+                case Keys.Oem3://Esc鍵下的「`」鍵
+                    moveFile();//執行多重檔案移動
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            float flSize = (float)numericUpDown1.Value;
+            using (Font fnt1 = new Font(listBox1.Font.FontFamily, flSize),
+                        fnt2 = new Font(listBox2.Font.FontFamily, flSize))
+            {
+                listBox1.Font = fnt1;
+                listBox2.Font = fnt2;
+            }
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+            if (textBox3.Text == "篩選！開頭")
+            {
+                string fdrPath = textBox2.Text;
+                di = new DirectoryInfo(fdrPath);
+                List<DirectoryInfo> dList = new List<DirectoryInfo>();
+                foreach (DirectoryInfo item in di.GetDirectories())
+                {
+                    if (item.Name.IndexOf("System Volume Information") == -1 &&
+                        item.Name.StartsWith("！"))
+                        dList.Add(item);
+                }
+                listBox2.DataSource = dList;//.Sort();
+
+
+            }
+        }
+
+        private void listBox1_DragDrop(object sender, DragEventArgs e)
+        {//https://wellbay.cc/thread-976171.htm
+            if (listBox1.Items.Count == 0)
+            {
+                List<DirectoryInfo> dis = new List<DirectoryInfo>();
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                foreach (string file in files)
+                {
+                    //if (Path.GetExtension(file) == ".txt")  //判斷檔案型別，只接受txt檔案
+                    //{
+                    //    textBox1.Text += file + "\r\n";
+                    //}
+                    DirectoryInfo di = new DirectoryInfo(file);
+                    dis.Add(di);
+                }
+                listBox1.DataSource = dis;
+            }
+        }
+
+        private void listBox1_DragEnter(object sender, DragEventArgs e)
+        {//https://wellbay.cc/thread-976171.htm
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+        }
+
+        private void listBox1_DragLeave(object sender, EventArgs e)
+        {// 這是拖放進入後又出範圍時之leave也 20210428
+
+        }
+
+        private void listBox1_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
             }
         }
     }
