@@ -20,7 +20,7 @@ namespace ExplorerFilemanager
         {
             listFolders(); listFiles();
             comboBox1.DataSource = new List<string> { "move to" };
-            textBox3.Text= "篩選！開頭";
+            textBox3.Text = "篩選！開頭";
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -278,9 +278,28 @@ namespace ExplorerFilemanager
             }
             if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
             {
-                if (e.KeyCode == Keys.C) //複製檔案 
+                if (e.KeyCode == Keys.C) //複製檔案到剪貼簿準備手動貼上
                 {
-                    ClipBoardPlus.CopyFiles(((FileInfo)listBox1.SelectedItem).FullName);
+                    if (listBox1.Items.Count > 0)
+                    {
+                        //ClipBoardPlus.CopyFile(((FileInfo)listBox1.SelectedItem).FullName);
+                        int i = 0;
+                        string[] listboxselected = new string[listBox1.SelectedItems.Count];
+                        switch (listBox1.Items[0].GetType().Name)
+                        {
+                            case "FileInfo":
+                                foreach (FileInfo item in listBox1.SelectedItems)
+                                    listboxselected[i++] = item.FullName;
+                                break;
+                            case "DirectoryInfo":
+                                foreach (DirectoryInfo item in listBox1.SelectedItems)
+                                    listboxselected[i++] = item.FullName;
+                                break;
+                            default:
+                                break;
+                        }
+                        ClipBoardPlus.CopyFilesDirs(listboxselected);
+                    }
                 }
             }
 
@@ -314,7 +333,7 @@ namespace ExplorerFilemanager
 
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
-            if (textBox3.Text== "篩選！開頭")
+            if (textBox3.Text == "篩選！開頭")
             {
                 string fdrPath = textBox2.Text;
                 di = new DirectoryInfo(fdrPath);
@@ -328,6 +347,46 @@ namespace ExplorerFilemanager
                 listBox2.DataSource = dList;//.Sort();
 
 
+            }
+        }
+
+        private void listBox1_DragDrop(object sender, DragEventArgs e)
+        {//https://wellbay.cc/thread-976171.htm
+            if (listBox1.Items.Count == 0)
+            {
+                List<DirectoryInfo> dis = new List<DirectoryInfo>();
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                foreach (string file in files)
+                {
+                    //if (Path.GetExtension(file) == ".txt")  //判斷檔案型別，只接受txt檔案
+                    //{
+                    //    textBox1.Text += file + "\r\n";
+                    //}
+                    DirectoryInfo di = new DirectoryInfo(file);
+                    dis.Add(di);
+                }
+                listBox1.DataSource = dis;
+            }
+        }
+
+        private void listBox1_DragEnter(object sender, DragEventArgs e)
+        {//https://wellbay.cc/thread-976171.htm
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+        }
+
+        private void listBox1_DragLeave(object sender, EventArgs e)
+        {// 這是拖放進入後又出範圍時之leave也 20210428
+
+        }
+
+        private void listBox1_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
             }
         }
     }
