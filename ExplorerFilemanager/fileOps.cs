@@ -59,9 +59,10 @@ FileStream	建立檔案串流，可以用來處理二進制檔
                             "來源檔日期： " + fi.LastWriteTime.ToString() + "\r\n\r\n" +
                             "目的檔日期： " + fiNew.LastWriteTime.ToString()+ "\r\n\r\n" +
                             "來源檔大小： " +(fi.Length / 1000).ToString() + "KB" + "\r\n\r\n" +
-                            "目的檔大小： " + (fiNew.Length/1000)+ "\r\n\r\n" +
+                            "目的檔大小： " + (fiNew.Length/1000)+ "KB" + "\r\n\r\n" +
                             "取消作業請按「取消」，\r\n重新命名移動過去的檔，請按「否」。", "注意：", 
-                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
+                            MessageBoxDefaultButton.Button2);
                         switch (dr)
                         {
                             case DialogResult.Cancel:
@@ -91,17 +92,6 @@ FileStream	建立檔案串流，可以用來處理二進制檔
                     else
                         File.Move(fi.FullName, moveToFileFullname);
 
-                    frm.listBox1RefQuery();
-                    listBox.SelectionMode = SelectionMode.One;
-                    if (idx + 10 < listBox.Items.Count)
-                        listBox.SelectedIndex = idx + 10;
-                    else
-                        listBox.SelectedIndex = listBox.Items.Count - 1;
-                    if (idx < listBox.Items.Count)
-                        listBox.SelectedIndex = idx;
-                    listBox.SelectionMode = SelectionMode.MultiExtended;
-                    //listBox.AutoScrollOffset = p;
-
                 }
                 catch (Exception e)
                 {
@@ -109,6 +99,17 @@ FileStream	建立檔案串流，可以用來處理二進制檔
                 }
                 finally {; }
             }
+            frm.listBox1RefQuery();
+            listBox.SelectionMode = SelectionMode.One;
+            if (idx + 10 < listBox.Items.Count)
+                listBox.SelectedIndex = idx + 10;
+            else
+                listBox.SelectedIndex = listBox.Items.Count - 1;
+            if (idx < listBox.Items.Count)
+                listBox.SelectedIndex = idx;
+            listBox.SelectionMode = SelectionMode.MultiExtended;
+            //listBox.AutoScrollOffset = p;
+
         }
 
         public void deleteFiles(DirectoryInfo di,
