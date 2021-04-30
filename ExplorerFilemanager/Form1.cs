@@ -369,6 +369,7 @@ namespace ExplorerFilemanager
             if (textBox3.Text == "篩選！開頭")
             {
                 string fdrPath = textBox2.Text;
+                if (!Directory.Exists(fdrPath)) return;
                 di = new DirectoryInfo(fdrPath);
                 List<DirectoryInfo> dList = new List<DirectoryInfo>();
                 foreach (DirectoryInfo item in di.GetDirectories())
