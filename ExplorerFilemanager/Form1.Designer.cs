@@ -41,6 +41,7 @@ namespace ExplorerFilemanager
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.textBox4 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -50,10 +51,10 @@ namespace ExplorerFilemanager
             this.listBox1.Font = new System.Drawing.Font("新細明體", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 20;
-            this.listBox1.Location = new System.Drawing.Point(0, 88);
+            this.listBox1.Location = new System.Drawing.Point(0, 168);
             this.listBox1.Name = "listBox1";
             this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBox1.Size = new System.Drawing.Size(626, 804);
+            this.listBox1.Size = new System.Drawing.Size(626, 724);
             this.listBox1.TabIndex = 0;
             this.listBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBox1_DragDrop);
             this.listBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBox1_DragEnter);
@@ -69,9 +70,9 @@ namespace ExplorerFilemanager
             this.listBox2.Font = new System.Drawing.Font("新細明體", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.listBox2.FormattingEnabled = true;
             this.listBox2.ItemHeight = 20;
-            this.listBox2.Location = new System.Drawing.Point(632, 88);
+            this.listBox2.Location = new System.Drawing.Point(632, 168);
             this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(414, 804);
+            this.listBox2.Size = new System.Drawing.Size(414, 724);
             this.listBox2.TabIndex = 1;
             this.listBox2.DoubleClick += new System.EventHandler(this.listBox2_DoubleClick);
             this.listBox2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBox2_KeyDown);
@@ -189,6 +190,18 @@ namespace ExplorerFilemanager
             this.label5.TabIndex = 11;
             this.label5.Text = "可多重選取，如檔案總管般　按Enter或「`」鍵亦可執行　可複製或刪除所選之檔案(Ctrl+c 與 delete 鍵)";
             // 
+            // textBox4
+            // 
+            this.textBox4.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.textBox4.Location = new System.Drawing.Point(12, 87);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(54, 29);
+            this.textBox4.TabIndex = 12;
+            this.textBox4.Text = "副檔名";
+            this.textBox4.Click += new System.EventHandler(this.textBox4_Click);
+            this.textBox4.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
+            this.textBox4.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox4_KeyDown);
+            // 
             // Form1
             // 
             this.AllowDrop = true;
@@ -196,6 +209,7 @@ namespace ExplorerFilemanager
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1141, 880);
+            this.Controls.Add(this.textBox4);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.numericUpDown1);
@@ -236,6 +250,7 @@ namespace ExplorerFilemanager
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox textBox4;
     }
 }
 

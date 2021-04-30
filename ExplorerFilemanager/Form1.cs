@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace ExplorerFilemanager
@@ -15,11 +16,12 @@ namespace ExplorerFilemanager
         }
 
 
-        DirectoryInfo di;
+        DirectoryInfo di; FileInfo[] fArray;
         private void Form1_Load(object sender, EventArgs e)
         {
             listFolders(); listFiles();
             comboBox1.DataSource = new List<string> { "move to" };
+            //textBox2.Text = @"G:\!!!!!@@分類檔案●@@!!!!!";
             textBox3.Text = "篩選！開頭";
         }
 
@@ -33,7 +35,8 @@ namespace ExplorerFilemanager
             string fdrPath = textBox1.Text;
             if (!Directory.Exists(fdrPath)) return;
             di = new DirectoryInfo(fdrPath);
-            listBox1.DataSource = di.GetFiles();
+            fArray = di.GetFiles();
+            listBox1.DataSource = fArray;
         }
         void listFolders()
         {
@@ -128,6 +131,7 @@ namespace ExplorerFilemanager
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             listFiles();
+
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -136,6 +140,11 @@ namespace ExplorerFilemanager
             {
                 case Keys.Escape:
                     this.Close();
+                    break;
+                case Keys.F5:
+                    if (textBox4.Text != "") extensionFilter();
+                    else listFiles();
+                    listFolders();
                     break;
                 default:
                     break;
@@ -153,7 +162,14 @@ namespace ExplorerFilemanager
         {
             if (File.Exists(fileorDir) || Directory.Exists(fileorDir))
             {
-                Process.Start(fileorDir);
+                try
+                {
+                    Process.Start(fileorDir);
+                }
+                catch
+                {
+                    MessageBox.Show("此連結或檔案無效。", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -249,7 +265,7 @@ namespace ExplorerFilemanager
                     listBox1RefQuery();
                     break;
                 case Keys.Delete:
-                    if (listBox1.SelectedItems.Count == 1)
+                    if (listBox1.SelectedItems.Count > 0)
                     {
                         if (ModifierKeys == Keys.Shift) { }
                         else
@@ -258,8 +274,11 @@ namespace ExplorerFilemanager
                                 Warning) != DialogResult.OK)
                                 return;
                         }
-                        int idx = listBox1.SelectedIndex;
-                        File.Delete(((FileInfo)listBox1.SelectedItem).FullName);
+                        int idx = listBox1.SelectedIndices[0];
+                        foreach (FileInfo item in listBox1.SelectedItems)
+                        {
+                            File.Delete(item.FullName);
+                        }
                         listBox1RefQuery();
                         listBox1.SelectionMode = SelectionMode.One;
                         if (idx + 10 < listBox1.Items.Count)
@@ -303,6 +322,20 @@ namespace ExplorerFilemanager
                 }
             }
 
+
+            if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                if (e.KeyCode == Keys.A) //複製檔案到剪貼簿準備手動貼上
+                {
+                    if (listBox1.Items.Count > 0)
+                    {
+                        for (int i = 0; i < listBox1.Items.Count; i++)
+                        {
+                            listBox1.SetSelected(i, true);
+                        }
+                    }
+                }
+            }
         }
 
         private void listBox2_KeyDown(object sender, KeyEventArgs e)
@@ -336,6 +369,7 @@ namespace ExplorerFilemanager
             if (textBox3.Text == "篩選！開頭")
             {
                 string fdrPath = textBox2.Text;
+                if (!Directory.Exists(fdrPath)) return;
                 di = new DirectoryInfo(fdrPath);
                 List<DirectoryInfo> dList = new List<DirectoryInfo>();
                 foreach (DirectoryInfo item in di.GetDirectories())
@@ -345,9 +379,9 @@ namespace ExplorerFilemanager
                         dList.Add(item);
                 }
                 listBox2.DataSource = dList;//.Sort();
-
-
             }
+            else
+                listFolders();
         }
 
         private void listBox1_DragDrop(object sender, DragEventArgs e)
@@ -388,6 +422,49 @@ namespace ExplorerFilemanager
             {
                 e.Effect = DragDropEffects.Copy;
             }
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox4_Click(object sender, EventArgs e)
+        {
+            textBox4.Text = "";listFiles();
+        }
+
+        private void textBox4_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Enter:
+                    extensionFilter();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void extensionFilter()
+        {
+            string fn; string textBox4Text = textBox4.Text;
+            if (textBox4Text == "") { listFiles(); return; }
+            if (fArray == null) return;
+            Regex rx = new Regex("[a-zA-Z]"); if (!rx.IsMatch(textBox4Text)) return;
+            List<FileInfo> fList = new List<FileInfo>();
+            foreach (FileInfo item in fArray)
+            {
+                fn = item.Name;
+                int extStart = fn.LastIndexOf(".") + 1;
+                //不分大小寫比對字串
+                if (string.Equals(fn.Substring(extStart, fn.Length - extStart), textBox4Text, StringComparison.OrdinalIgnoreCase))
+                {
+                    fList.Add(item);
+                }
+            }
+            listBox1.DataSource = fList;
+
         }
     }
 }
