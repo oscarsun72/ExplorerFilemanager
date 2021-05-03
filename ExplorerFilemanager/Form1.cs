@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -192,14 +191,21 @@ namespace ExplorerFilemanager
 
         private void listBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            switch (e.Button)
             {
-                if (listBox1.SelectedItems.Count > 0)
-                {
-                    FileInfo fi = listBox1.SelectedItem as FileInfo;
-                    rightKeyMouse(fi.FullName);
-                }
+                case MouseButtons.Right:
+                    if (listBox1.SelectedItems.Count > 0)
+                    {
+                        FileInfo fi = listBox1.SelectedItem as FileInfo;
+                        rightKeyMouse(fi.FullName);
+                    }
+                    break;
+                case MouseButtons.Left:
+                    ////再研究：拖放清單中的項目 https://zh.stackoom.com/question/2KGOV/%E5%9C%A8%E5%B0%8D%E8%B1%A1%E5%88%97%E8%A1%A8%E6%A1%86%E4%B8%8A%E6%8B%96%E6%94%BE
+                    //listBox1.DoDragDrop(listBox1.SelectedItems, DragDropEffects.Copy);
+                    break;
             }
+
         }
 
         private void listBox2_MouseDown(object sender, MouseEventArgs e)
@@ -415,7 +421,6 @@ namespace ExplorerFilemanager
 
         private void listBox1_DragLeave(object sender, EventArgs e)
         {// 這是拖放進入後又出範圍時之leave也 20210428
-
         }
 
         private void listBox1_DragOver(object sender, DragEventArgs e)
@@ -433,7 +438,7 @@ namespace ExplorerFilemanager
 
         private void textBox4_Click(object sender, EventArgs e)
         {
-            textBox4.Text = "";listFiles();
+            textBox4.Text = ""; listFiles();
         }
 
         private void textBox4_KeyDown(object sender, KeyEventArgs e)
@@ -471,10 +476,10 @@ namespace ExplorerFilemanager
         {//檔名篩選
             string textBox5Text = textBox5.Text;
             if (textBox5Text == "") { listFiles(); return; }
-            if (fArray == null) return;            
+            if (fArray == null) return;
             List<FileInfo> fList = new List<FileInfo>();
             foreach (FileInfo item in fArray)
-            {                
+            {
                 //不分大小寫比對字串
                 if (string.Equals(item.Name, textBox5Text, StringComparison.OrdinalIgnoreCase))
                     fList.Add(item);
