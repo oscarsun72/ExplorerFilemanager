@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -389,7 +390,8 @@ namespace ExplorerFilemanager
             if (listBox1.Items.Count == 0)
             {
                 List<DirectoryInfo> dis = new List<DirectoryInfo>();
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                string[] files = (string[])e.Data.GetData(
+                    DataFormats.FileDrop);
                 foreach (string file in files)
                 {
                     //if (Path.GetExtension(file) == ".txt")  //判斷檔案型別，只接受txt檔案
@@ -439,7 +441,7 @@ namespace ExplorerFilemanager
             switch (e.KeyCode)
             {
                 case Keys.Enter:
-                    extensionFilter();
+                    extensionFilter();//副檔名篩選
                     break;
                 default:
                     break;
@@ -447,11 +449,12 @@ namespace ExplorerFilemanager
         }
 
         private void extensionFilter()
-        {
+        {//副檔名篩選
             string fn; string textBox4Text = textBox4.Text;
             if (textBox4Text == "") { listFiles(); return; }
             if (fArray == null) return;
-            Regex rx = new Regex("[a-zA-Z]"); if (!rx.IsMatch(textBox4Text)) return;
+            //Regex rx = new Regex("[a-zA-Z]"); if (!rx.IsMatch(textBox4Text)) return;
+            if (!new Regex("[a-zA-Z]").IsMatch(textBox4Text)) return;
             List<FileInfo> fList = new List<FileInfo>();
             foreach (FileInfo item in fArray)
             {
@@ -459,12 +462,56 @@ namespace ExplorerFilemanager
                 int extStart = fn.LastIndexOf(".") + 1;
                 //不分大小寫比對字串
                 if (string.Equals(fn.Substring(extStart, fn.Length - extStart), textBox4Text, StringComparison.OrdinalIgnoreCase))
-                {
                     fList.Add(item);
-                }
             }
             listBox1.DataSource = fList;
 
+        }
+        private void fileNameFilter()
+        {//檔名篩選
+            string textBox5Text = textBox5.Text;
+            if (textBox5Text == "") { listFiles(); return; }
+            if (fArray == null) return;            
+            List<FileInfo> fList = new List<FileInfo>();
+            foreach (FileInfo item in fArray)
+            {                
+                //不分大小寫比對字串
+                if (string.Equals(item.Name, textBox5Text, StringComparison.OrdinalIgnoreCase))
+                    fList.Add(item);
+            }
+            listBox1.DataSource = fList;
+
+        }
+        private void textBox5_TextChanged(object sender, EventArgs e)
+        {//檔名篩選
+
+        }
+
+        private void textBox5_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Enter:
+                    fileNameFilter();//副檔名篩選
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void textBox1_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] sc = (string[])e.Data.GetData(DataFormats.FileDrop);
+            //是資料夾才處理
+            if (!Directory.Exists(sc[0])) return;
+            TextBox txbox = (TextBox)sender;
+            txbox.Text = sc[0];
+        }
+
+        private void textBox1_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Copy;
         }
     }
 }
