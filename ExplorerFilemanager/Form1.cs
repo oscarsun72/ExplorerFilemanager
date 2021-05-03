@@ -23,6 +23,8 @@ namespace ExplorerFilemanager
             comboBox1.DataSource = new List<string> { "move to" };
             //textBox2.Text = @"G:\!!!!!@@分類檔案●@@!!!!!";
             textBox3.Text = "篩選！開頭";
+            //測試用：
+            textBox2.Text = @"X:\temp";
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -517,6 +519,32 @@ namespace ExplorerFilemanager
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 e.Effect = DragDropEffects.Copy;
+        }
+
+        private void listBox2_DragDrop(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void listBox2_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.All;
+            
+            int idx;
+            if (listBox2.Items.Count > 0)
+            {
+                idx = listBox2.IndexFromPoint(new
+                    Point(e.X-(listBox2.Left+this.Left),
+                    e.Y-(listBox2.Top+this.Top+(Top-listBox2.Top))));
+                if (idx > -1)
+                    listBox2.SelectedIndex = idx;
+            }
+        }
+
+        private void listBox2_MouseMove(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }
