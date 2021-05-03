@@ -37,14 +37,15 @@ FileStream	建立檔案串流，可以用來處理二進制檔
         public void moveFiles2DirControl(DirectoryInfo di,
             ListBox listBox, Form1 frm)
         {
-            string moveToFileFullname; ListBox.SelectedIndexCollection idc = listBox.SelectedIndices;//Point p;
+            string moveToFileFullname; ListBox.SelectedIndexCollection idc = listBox.SelectedIndices;//Point p;//記下清單中選取的位置
             int idx = idc[idc.Count - 1];
             foreach (FileInfo fi in fis)
             {
                 //Point p = listBox1.AutoScrollOffset;
                 try
                 {
-                    moveToFileFullname = di.FullName + "\\" + fi.ToString();                    
+                    moveToFileFullname = di.FullName + "\\" + fi.ToString();
+                    if (moveToFileFullname == fi.FullName)continue;//避免同一檔案的誤刪（移動時須先刪除目的檔案才移動來源檔）
                     if (File.Exists(moveToFileFullname))
                     {
                         FileInfo fiNew= new FileInfo(moveToFileFullname);
