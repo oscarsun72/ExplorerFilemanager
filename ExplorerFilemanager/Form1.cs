@@ -23,8 +23,11 @@ namespace ExplorerFilemanager
             comboBox1.DataSource = new List<string> { "move to" };
             //textBox2.Text = @"G:\!!!!!@@分類檔案●@@!!!!!";
             textBox3.Text = "篩選！開頭";
+            #region
             //測試用：
             textBox2.Text = @"X:\temp";
+            textBox1.Text = @"X:\temp\新增資料夾";
+            #endregion
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
