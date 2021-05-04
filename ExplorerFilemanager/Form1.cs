@@ -243,7 +243,7 @@ namespace ExplorerFilemanager
         private void listBox1_KeyPress(object sender, KeyPressEventArgs e)
         {//https://bit.ly/3esQfGM  https://bit.ly/3aunpVd
             if (doNotEntered)//不讓按鍵干擾操作
-                e.Handled = true;
+            { e.Handled = true;doNotEntered = false; }//使用完畢要還原
             //if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
             //    if (e.KeyChar == 3)//char.Parse("c")) 複製檔案 
             //    {
