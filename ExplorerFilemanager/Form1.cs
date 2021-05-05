@@ -21,11 +21,11 @@ namespace ExplorerFilemanager
         {
             listFolders(); listFiles();
             comboBox1.DataSource = new List<string> { "move to" };
-            //textBox2.Text = @"G:\!!!!!@@分類檔案●@@!!!!!";
-            textBox3.Text = "篩選！開頭";
+            textBox2.Text = @"G:\!!!!!@@分類檔案●@@!!!!!";
+            //textBox3.Text = "篩選！開頭";
             # region 測試用
-            textBox2.Text = @"X:\temp";
-            textBox1.Text = @"X:\temp\新增資料夾";
+            //textBox2.Text = @"X:\temp";
+            //textBox1.Text = @"X:\temp\新增資料夾";
             #endregion
         }
 
@@ -243,7 +243,7 @@ namespace ExplorerFilemanager
         private void listBox1_KeyPress(object sender, KeyPressEventArgs e)
         {//https://bit.ly/3esQfGM  https://bit.ly/3aunpVd
             if (doNotEntered)//不讓按鍵干擾操作
-            { e.Handled = true;doNotEntered = false; }//使用完畢要還原
+            { e.Handled = true; doNotEntered = false; }//使用完畢要還原
             //if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
             //    if (e.KeyChar == 3)//char.Parse("c")) 複製檔案 
             //    {
@@ -442,7 +442,8 @@ namespace ExplorerFilemanager
 
         private void textBox4_Click(object sender, EventArgs e)
         {
-            textBox4.Text = ""; listFiles();
+            TextBox tb = (TextBox)sender;
+            tb.Text = ""; listFiles();
         }
 
         private void textBox4_KeyDown(object sender, KeyEventArgs e)
@@ -485,7 +486,7 @@ namespace ExplorerFilemanager
             foreach (FileInfo item in fArray)
             {
                 //不分大小寫比對字串
-                if (string.Equals(item.Name, textBox5Text, StringComparison.OrdinalIgnoreCase))
+                if (item.Name.IndexOf(textBox5Text) > -1)//, StringComparison.OrdinalIgnoreCase))
                     fList.Add(item);
             }
             listBox1.DataSource = fList;
@@ -501,7 +502,7 @@ namespace ExplorerFilemanager
             switch (e.KeyCode)
             {
                 case Keys.Enter:
-                    fileNameFilter();//副檔名篩選
+                    fileNameFilter();//檔名篩選
                     break;
                 default:
                     break;
@@ -532,13 +533,13 @@ namespace ExplorerFilemanager
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 e.Effect = DragDropEffects.All;
-            
+
             int idx;
             if (listBox2.Items.Count > 0)
             {
                 idx = listBox2.IndexFromPoint(new
-                    Point(e.X-(listBox2.Left+this.Left),
-                    e.Y-(listBox2.Top+this.Top+(Top-listBox2.Top))));
+                    Point(e.X - (listBox2.Left + this.Left),
+                    e.Y - (listBox2.Top + this.Top + (Top - listBox2.Top))));
                 if (idx > -1)
                     listBox2.SelectedIndex = idx;
             }
