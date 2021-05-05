@@ -112,7 +112,7 @@ FileStream	建立檔案串流，可以用來處理二進制檔
                 }
                 catch (Exception e)
                 {
-                    if (e.Message.IndexOf("拒絕存取路徑") == -1)
+                    //if (e.Message.IndexOf("拒絕存取路徑") == -1)//這應只是唯讀檔的問題 20210506
                         MessageBox.Show(e.Message);
                 }
                 finally {; }
