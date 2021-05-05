@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace ExplorerFilemanager
@@ -41,6 +40,7 @@ FileStream	建立檔案串流，可以用來處理二進制檔
             int idx = idc[idc.Count - 1];
             CheckBox chkBx = Application.OpenForms[0].Controls["checkBox1"] as CheckBox;
             bool checkBoxValue = chkBx.Checked;
+            bool fiReadOnly = false, fiNewReadOnly = false;
             foreach (FileInfo fi in fis)
             {
                 //Point p = listBox1.AutoScrollOffset;
@@ -71,10 +71,17 @@ FileStream	建立檔案串流，可以用來處理二進制檔
                             case DialogResult.Cancel:
                                 break;
                             case DialogResult.Yes:
+                                if (fiNew.IsReadOnly || fi.IsReadOnly)
+                                {
+                                    fiReadOnly = fi.IsReadOnly; fiNewReadOnly = fiNew.IsReadOnly;
+                                    fiNew.IsReadOnly = false; fi.IsReadOnly = false;
+                                }
                                 File.Delete(moveToFileFullname);
                                 File.Move(fi.FullName, moveToFileFullname);
+                                if (fiReadOnly || fiNewReadOnly)
+                                { fi.IsReadOnly = fiReadOnly; fiNew.IsReadOnly = fiNewReadOnly; }
                                 break;
-                            case DialogResult.No:
+                            case DialogResult.No://重新命名移動過去的檔
                                 int i = 0;
                                 string ext = fi.Extension;
                                 string movefileName =
@@ -84,7 +91,14 @@ FileStream	建立檔案串流，可以用來處理二進制檔
                                     moveToFileFullname = movefileName + "("
                                            + (i++.ToString() + ")" + ext);
                                 } while (File.Exists(moveToFileFullname));
+                                if (fi.IsReadOnly)
+                                {
+                                    fiReadOnly = fi.IsReadOnly; fiNewReadOnly = fiReadOnly;
+                                    fi.IsReadOnly = false;
+                                }
                                 File.Move(fi.FullName, moveToFileFullname);
+                                if (fiReadOnly)
+                                { fi.IsReadOnly = fiReadOnly; fiNew.IsReadOnly = fiNewReadOnly; }
                                 break;
                             default:
                                 break;
@@ -119,5 +133,12 @@ FileStream	建立檔案串流，可以用來處理二進制檔
         public void deleteFiles(DirectoryInfo di,
             ListBox listBox, Form1 frm)
         { }
+
+        public void noReadOnlyFiles(string fFullname)
+        { //取消唯讀
+
+        }
+
+
     }
 }
