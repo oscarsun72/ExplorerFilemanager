@@ -58,7 +58,7 @@ FileStream	建立檔案串流，可以用來處理二進制檔
                             dr = DialogResult.No;
                         else
                             dr = MessageBox.Show("檔案已存在，是否取代原檔案？\r\n" +
-                                "檔名： " + fi.Name + "\r\n\r\n" +
+                                "檔名：    " + fi.Name + "\r\n\r\n" +
                                 "來源檔日期： " + fi.LastWriteTime.ToString() + "\r\n\r\n" +
                                 "目的檔日期： " + fiNew.LastWriteTime.ToString() + "\r\n\r\n" +
                                 "來源檔大小： " + (fi.Length / 1000).ToString() + "KB" + "\r\n\r\n" +
@@ -76,8 +76,11 @@ FileStream	建立檔案串流，可以用來處理二進制檔
                                     fiReadOnly = fi.IsReadOnly; fiNewReadOnly = fiNew.IsReadOnly;
                                     fiNew.IsReadOnly = false; fi.IsReadOnly = false;
                                 }
-                                File.Delete(moveToFileFullname);
-                                File.Move(fi.FullName, moveToFileFullname);
+                                File.Copy(fi.FullName, moveToFileFullname, true);
+                                fi.Delete();//https://docs.microsoft.com/en-us/dotnet/api/system.io.file.move?view=netframework-4.7.2#System_IO_File_Move_System_String_System_String_System_Boolean_
+                                //File.Delete(moveToFileFullname);
+                                //File.Move(fi.FullName, moveToFileFullname);
+                                //fi.MoveTo(moveToFileFullname, true);//明明有卻不能用？ https://docs.microsoft.com/zh-tw/dotnet/api/system.io.fileinfo.moveto?view=net-5.0#System_IO_FileInfo_MoveTo_System_String_System_Boolean_
                                 if (fiReadOnly || fiNewReadOnly)
                                 { fi.IsReadOnly = fiReadOnly; fiNew.IsReadOnly = fiNewReadOnly; }
                                 break;
