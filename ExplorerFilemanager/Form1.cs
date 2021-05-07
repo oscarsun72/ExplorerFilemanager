@@ -452,6 +452,7 @@ namespace ExplorerFilemanager
             {
                 case Keys.Enter:
                     extensionFilter();//副檔名篩選
+                    listBox1.Focus();
                     break;
                 default:
                     break;
@@ -503,6 +504,7 @@ namespace ExplorerFilemanager
             {
                 case Keys.Enter:
                     fileNameFilter();//檔名篩選
+                    listBox1.Focus();
                     break;
                 default:
                     break;
